@@ -6,8 +6,7 @@ public enum SkillTypes
 {
     Blunt,
     Sharp,
-    Magic,
-    None
+    Magic
 }
 
 
@@ -17,7 +16,7 @@ public class Skill : MonoBehaviour
     [SerializeField] int power = 0;
     [SerializeField] int range = 1;
     [SerializeField] CombatEffects[] combatEffects = { };
-    [SerializeField] SkillTypes skillType = SkillTypes.None;
+    [SerializeField] SkillTypes skillType;
 
     // Start is called before the first frame update
     void Start()

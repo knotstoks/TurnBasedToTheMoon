@@ -11,7 +11,7 @@ public class Party : MonoBehaviour
 
     public Unit[] getActiveUnitList()
     {
-        Unit[] unitList = {unit_1, unit_2, unit_3, unit_4};
+        Unit[] unitList = {unit_1, unit_2, unit_3, unit_4}; // There should be a check here to see if anyone dies (hp < 0) and return a resized list
         return unitList;
     }
 
