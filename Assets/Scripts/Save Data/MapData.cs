@@ -2,17 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapData : MonoBehaviour
+public class MapData
 {
-    // Start is called before the first frame update
-    void Start()
+    public class MapNode
     {
-        
+        public string locationName {get; set;}
+        public bool activated {get; set;}
+        public MapNode(string nameInput)
+        {
+            locationName = nameInput;
+            activated = false;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    /*
+    Homebases
+    */
+    public Dictionary<string, MapNode> homeBases = new Dictionary<string, MapNode>();
+
+    /*
+    Dungeons
+    */
+    public Dictionary<string, MapNode> dungeons = new Dictionary<string, MapNode>();
+
+    /*
+    Side Stories
+    */
+    public Dictionary<string, MapNode> sideStories = new Dictionary<string, MapNode>();
+    public MapData()
     {
-        
+        // TODO: Generate the default list of MapNodes when a new MapData is created
+
     }
 }
