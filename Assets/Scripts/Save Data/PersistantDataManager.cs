@@ -27,7 +27,7 @@ public class PersistantDataManager : MonoBehaviour
 
     private void Start()
     {
-        // Check to see if any files have not been initialised, this could be due to running the game for the first time, or corruption
+        // Check to see if any files have not been initialised, this could be due to running the game for the first time, or due to corruption
         if (!File.Exists(Application.persistentDataPath + "/MapData.dat"))
         {
             // Create a new file if it doesn't exist (aka first time loading in)
