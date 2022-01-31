@@ -6,17 +6,18 @@ public enum SkillTypes
 {
     Blunt,
     Sharp,
-    Magic
+    Magic,
+    Normal
 }
 
 
 public class Skill : MonoBehaviour
 {
-    [SerializeField] string skillName = "Placeholder Name";
-    [SerializeField] int power = 0;
-    [SerializeField] int range = 1;
-    [SerializeField] CombatEffects[] combatEffects = { };
-    [SerializeField] SkillTypes skillType;
+    [SerializeField] private string skillName = "Placeholder Name";
+    [SerializeField] private int power  = 0;
+    [SerializeField] private int range = 1;
+    [SerializeField] private CombatEffects[] combatEffects  = { };
+    [SerializeField] private SkillTypes skillType = SkillTypes.Normal;
 
     // Start is called before the first frame update
     void Start()
@@ -29,4 +30,30 @@ public class Skill : MonoBehaviour
     {
         
     }
+
+    public string GetSkillname()
+    {
+        return skillName;
+    }
+
+    public int GetPower()
+    {
+        return power;
+    }
+
+    public int GetRange()
+    {
+        return range;
+    }
+
+    public CombatEffects[] GetCombatEffects()
+    {
+        return combatEffects;
+    }
+
+    public SkillTypes GetSkillType()
+    {
+        return skillType;
+    }
+
 }
