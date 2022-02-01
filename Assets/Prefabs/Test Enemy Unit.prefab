@@ -49,10 +49,11 @@ MonoBehaviour:
   speed: 10
   power: 10
   friendly: 0
-  skill_1: {fileID: 1954349893803591063}
-  skill_2: {fileID: 0}
-  skill_3: {fileID: 0}
-  skill_4: {fileID: 0}
+  skills:
+  - {fileID: 1954349893803591063}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &1954349893803591063
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,29 +4,30 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] int currentHealth = 0;
-    [SerializeField] int maxHealth = 0;
-    [SerializeField] int speed = 0;
-    [SerializeField] int power = 0;
-    [SerializeField] bool friendly = true;
+    [SerializeField] private int currentHealth = 0;
+    [SerializeField] private int maxHealth = 0;
+    [SerializeField] private int speed = 0;
+    [SerializeField] private int power = 0;
+    [SerializeField] private bool friendly = true;
 
-    [SerializeField] Skill skill_1;
-    [SerializeField] Skill skill_2;
-    [SerializeField] Skill skill_3;
-    [SerializeField] Skill skill_4;
+    [SerializeField] private Skill[] skills = new Skill[4];
 
-    public Skill[] getSkills()
-    {
-        Skill[] skillList = { skill_1, skill_2, skill_3, skill_4 };
-        return skillList;
+    public Skill[] GetSkills()
+    { 
+        return skills;
     }
 
-    public bool getFriendly()
+    public bool GetFriendly()
     {
         return friendly;
     }
 
-    public int getSpeed()
+    public void SetFriendly(bool state)
+    {
+        friendly = state;
+    }
+
+    public int GetSpeed()
     {
         return speed;
     }

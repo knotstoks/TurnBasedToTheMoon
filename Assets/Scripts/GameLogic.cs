@@ -2,50 +2,55 @@ using UnityEngine;
 
 public class GameLogic : MonoBehaviour
 {
-    public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST, TRANSITION }
+    public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST, TRANSITION, PAUSED }
     private BattleState battleState;
 
     [SerializeField] private Party playerParty;
     private Unit[] playerUnits;
     [SerializeField] private Party enemyParty;
-    Unit[] enemyUnits;
-    Unit currentUnit = null;
+    private Unit[] enemyUnits;
+    private Unit currentUnit = null;
+
+    [SerializeField] private CombatManager combatManager;
 
     [SerializeField] private Transform[] characterLocations = new Transform[8]; // TODO: Should be hard coded, we adjust when we get the sprites in
-    int[] actionSpeedArray = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    int[] actionValueArray = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] actionSpeedArray = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    private int[] actionValueArray = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    void Start() // Where are your access modifiers >:(
+    private void Start()
     {
         battleState = BattleState.START;
         LoadAllUnits();
         battleState = BattleState.TRANSITION;
     }
 
-    void Update()
+    private void Update()
     {
         if (battleState == BattleState.TRANSITION)
         {
-            UpdateActionValue();
             currentUnit = CheckActionValue();
             if (currentUnit != null)
             {
-                Debug.Log(currentUnit.gameObject.name + " is taking his turn!");
-                if (currentUnit.getFriendly())
+                if (currentUnit.GetFriendly())
                     battleState = BattleState.PLAYERTURN;
                 else
                     battleState = BattleState.ENEMYTURN;
-
             }
+            else 
+                UpdateActionValue();
         }
 
         if (battleState == BattleState.PLAYERTURN)
         {
-            // Pass to CombatController
+            battleState = BattleState.PAUSED;
+            Debug.Log("Friendly " + currentUnit.gameObject.name + " is taking his turn!");
+            combatManager.TakeTurn(currentUnit);
         }
 
         if (battleState == BattleState.ENEMYTURN)
         {
+            battleState = BattleState.PAUSED;
+            Debug.Log("Enemy " + currentUnit.gameObject.name + " is taking his turn!");
             // Pass to EnemyController
         }
 
@@ -53,33 +58,29 @@ public class GameLogic : MonoBehaviour
     }
 
     // Called once on initialising combat scene
-    void LoadAllUnits()
+    private void LoadAllUnits()
     {
         playerUnits = playerParty.getActiveUnitList();
         enemyUnits = enemyParty.getActiveUnitList();
 
         // Player
-        for (int i = 0; i < 4; i++) // Can make it better by just taking playerUnits.Count and remove null check
+        for (int i = 0; i < playerUnits.Length; i++)
         {
-            if (playerUnits[i] != null)
-            {
-                Instantiate(playerUnits[i], characterLocations[i].position, Quaternion.identity);
-                actionSpeedArray[i] = playerUnits[i].getSpeed();
-            }
+            Instantiate(playerUnits[i], characterLocations[i].position, Quaternion.identity);
+            playerUnits[i].SetFriendly(true);
+            actionSpeedArray[i] = playerUnits[i].GetSpeed();
         }
 
         // Enemies
-        for (int i = 0; i < 4; i++) // Same for here
+        for (int i = 0; i < enemyUnits.Length; i++)
         {
-            if (enemyUnits[i] != null) 
-            {
-                Instantiate(enemyUnits[i], characterLocations[i + 4].position, Quaternion.identity);
-                actionSpeedArray[i + 4] = enemyUnits[i].getSpeed();
-            }
+            Instantiate(enemyUnits[i], characterLocations[i + 4].position, Quaternion.Euler(0, 180, 0));
+            enemyUnits[i].SetFriendly(false);
+            actionSpeedArray[i + 4] = enemyUnits[i].GetSpeed();
         }
     }
 
-    void UpdateActionValue()
+    private void UpdateActionValue()
     {
         for (int i = 0; i < 8; i++)
         {
@@ -87,24 +88,67 @@ public class GameLogic : MonoBehaviour
         }
     }
 
-    Unit CheckActionValue()
+    private Unit CheckActionValue()
     {
         for (int i = 0; i < 8; i++)
         {
             if (actionValueArray[i] >= 100)
             {
-                if(i < 4)
+                if (i < 4) {
                     return playerUnits[i];
-
-                return enemyUnits[i - 4];
-
+                }
+                else
+                {
+                    return enemyUnits[i - 4];
+                }
             }
         }
+
         return null;
     }
 
-    public void UpdateBattleState(BattleState newState)
+    // Reset speed and switch to transition
+    public void FinishedTurn(Unit unit) 
     {
-        battleState = newState;
+        int pos = GetPosition(unit);
+        int arrayPos;
+        if (unit.GetFriendly())
+            arrayPos = 3 - pos;
+        else
+            arrayPos = pos + 4;
+        actionValueArray[arrayPos] = 0;
+        battleState = BattleState.TRANSITION; // TODO: There's no state for animations to play out
+    }
+
+    // Returns an int 0 - 3 depending on the position of the unit
+    public int GetPosition(Unit unit)
+    {
+        if (unit.GetFriendly())
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (playerUnits[i].Equals(unit))
+                {
+                    return i;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (enemyUnits[i].Equals(unit))
+                {
+                    return i;
+                }
+            }
+        }
+
+        throw new System.Exception("Unit is not found"); // TODO: Print log properly
+    }
+
+    public Unit GetUnit(int position, bool friendly)
+    {
+        return (friendly) ? playerUnits[position] : enemyUnits[position];
     }
 }

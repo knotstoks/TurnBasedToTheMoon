@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 31ae1674ff74a7f4089d9308d340ff7d
+=======
+<<<<<<< HEAD:Assets/Scripts/CharacterContainer.cs.meta
+guid: 8fb4224cd956ca145946a129c4adbabb
+=======
+guid: 62abcf71b3e66bc45bf5693ad6f3b98d
+>>>>>>> main:Assets/Scripts/Out of Combat/Home Base/HomeBaseParent.cs.meta
+>>>>>>> main
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
