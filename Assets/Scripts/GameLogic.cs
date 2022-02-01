@@ -6,10 +6,12 @@ public class GameLogic : MonoBehaviour
     private BattleState battleState;
 
     [SerializeField] private Party playerParty;
+    public CharacterContainer[] playerContainers;
     private Unit[] playerUnits;
     [SerializeField] private Party enemyParty;
+    public CharacterContainer[] enemyContainers;
     private Unit[] enemyUnits;
-    private Unit currentUnit = null;
+    private CharacterContainer currentContainer = null;
 
     [SerializeField] private CombatManager combatManager;
 
@@ -28,10 +30,10 @@ public class GameLogic : MonoBehaviour
     {
         if (battleState == BattleState.TRANSITION)
         {
-            currentUnit = CheckActionValue();
-            if (currentUnit != null)
+            currentContainer = CheckActionValue();
+            if (currentContainer != null)
             {
-                if (currentUnit.GetFriendly())
+                if (currentContainer.unit.GetFriendly())
                     battleState = BattleState.PLAYERTURN;
                 else
                     battleState = BattleState.ENEMYTURN;
@@ -43,14 +45,14 @@ public class GameLogic : MonoBehaviour
         if (battleState == BattleState.PLAYERTURN)
         {
             battleState = BattleState.PAUSED;
-            Debug.Log("Friendly " + currentUnit.gameObject.name + " is taking his turn!");
-            combatManager.TakeTurn(currentUnit);
+            Debug.Log("Friendly " + currentContainer.unit.gameObject.name + " is taking his turn!");
+            combatManager.TakeTurn(currentContainer.unit);
         }
 
         if (battleState == BattleState.ENEMYTURN)
         {
             battleState = BattleState.PAUSED;
-            Debug.Log("Enemy " + currentUnit.gameObject.name + " is taking his turn!");
+            Debug.Log("Enemy " + currentContainer.unit.gameObject.name + " is taking his turn!");
             // Pass to EnemyController
         }
 
@@ -68,6 +70,7 @@ public class GameLogic : MonoBehaviour
         {
             Instantiate(playerUnits[i], characterLocations[i].position, Quaternion.identity);
             playerUnits[i].SetFriendly(true);
+            playerContainers[i].LoadUnit(playerUnits[i]);
             actionSpeedArray[i] = playerUnits[i].GetSpeed();
         }
 
@@ -76,6 +79,7 @@ public class GameLogic : MonoBehaviour
         {
             Instantiate(enemyUnits[i], characterLocations[i + 4].position, Quaternion.Euler(0, 180, 0));
             enemyUnits[i].SetFriendly(false);
+            enemyContainers[i].LoadUnit(enemyUnits[i]);
             actionSpeedArray[i + 4] = enemyUnits[i].GetSpeed();
         }
     }
@@ -88,18 +92,18 @@ public class GameLogic : MonoBehaviour
         }
     }
 
-    private Unit CheckActionValue()
+    private CharacterContainer CheckActionValue()
     {
         for (int i = 0; i < 8; i++)
         {
             if (actionValueArray[i] >= 100)
             {
                 if (i < 4) {
-                    return playerUnits[i];
+                    return playerContainers[i];
                 }
                 else
                 {
-                    return enemyUnits[i - 4];
+                    return enemyContainers[i - 4];
                 }
             }
         }

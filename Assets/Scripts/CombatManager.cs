@@ -10,8 +10,6 @@ public class CombatManager : MonoBehaviour
 
     private bool validTarget;
 
-
-
     [SerializeField] private GameObject[] skillUI = new GameObject[4];
     private Skill[] skills = { };
     private int selectedSkill;
@@ -89,11 +87,13 @@ public class CombatManager : MonoBehaviour
     private void DeliverSkill(int skillNumber)
     {
         string skillName = skills[skillNumber].GetSkillname();
-        int power = skills[skillNumber].GetPower();
+        int basePower = skills[skillNumber].GetPower();
+        
 
+        Debug.Log(currentUnit + " attacks " + targetUnit + " with " + skillName + " at " + basePower + "%power!"); //to implement
 
-        Debug.Log(currentUnit + " attacks " + targetUnit + " with " + skillName + " at " + power + "%power!"); //to implement
-
+        
+        // TODO: Trigger any effects the character has
 
         gameLogic.FinishedTurn(currentUnit);
     }

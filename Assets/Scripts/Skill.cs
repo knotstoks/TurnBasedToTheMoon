@@ -16,7 +16,7 @@ public class Skill : MonoBehaviour
     [SerializeField] private string skillName = "Placeholder Name";
     [SerializeField] private int power  = 0;
     [SerializeField] private int range = 1;
-    [SerializeField] private CombatEffects[] combatEffects  = { };
+    [SerializeField] private CombatEffect[] combatEffects  = { };
     [SerializeField] private SkillTypes skillType = SkillTypes.Normal;
 
     // Start is called before the first frame update
@@ -46,7 +46,7 @@ public class Skill : MonoBehaviour
         return range;
     }
 
-    public CombatEffects[] GetCombatEffects()
+    public CombatEffect[] GetCombatEffects()
     {
         return combatEffects;
     }
