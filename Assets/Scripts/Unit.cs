@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] int currentHealth = 0;
-    [SerializeField] int maxHealth = 0;
-    [SerializeField] int speed = 0;
-    [SerializeField] int power = 0;
-    [SerializeField] bool friendly = true;
+    [SerializeField] private int currentHealth = 0;
+    [SerializeField] private int maxHealth = 0;
+    [SerializeField] private int speed = 0;
+    [SerializeField] private int power = 0;
+    [SerializeField] private bool friendly = true;
 
-    [SerializeField] Skill[] skills = new Skill[4];
+    [SerializeField] private Skill[] skills = new Skill[4];
 
     public Skill[] GetSkills()
     { 

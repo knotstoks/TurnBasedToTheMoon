@@ -17,14 +17,14 @@ public class GameLogic : MonoBehaviour
     private int[] actionSpeedArray = { 0, 0, 0, 0, 0, 0, 0, 0 };
     private int[] actionValueArray = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    void Start() // Where are your access modifiers >:(
+    private void Start()
     {
         battleState = BattleState.START;
         LoadAllUnits();
         battleState = BattleState.TRANSITION;
     }
 
-    void Update()
+    private void Update()
     {
         if (battleState == BattleState.TRANSITION)
         {
@@ -35,7 +35,6 @@ public class GameLogic : MonoBehaviour
                     battleState = BattleState.PLAYERTURN;
                 else
                     battleState = BattleState.ENEMYTURN;
-
             }
             else 
                 UpdateActionValue();
@@ -65,8 +64,7 @@ public class GameLogic : MonoBehaviour
         enemyUnits = enemyParty.getActiveUnitList();
 
         // Player
-        int partySize = playerUnits.Length;
-        for (int i = 0; i < partySize; i++)
+        for (int i = 0; i < playerUnits.Length; i++)
         {
             Instantiate(playerUnits[i], characterLocations[i].position, Quaternion.identity);
             playerUnits[i].SetFriendly(true);
@@ -74,8 +72,7 @@ public class GameLogic : MonoBehaviour
         }
 
         // Enemies
-        partySize = enemyUnits.Length;
-        for (int i = 0; i < partySize; i++)
+        for (int i = 0; i < enemyUnits.Length; i++)
         {
             Instantiate(enemyUnits[i], characterLocations[i + 4].position, Quaternion.Euler(0, 180, 0));
             enemyUnits[i].SetFriendly(false);
@@ -106,11 +103,12 @@ public class GameLogic : MonoBehaviour
                 }
             }
         }
+
         return null;
     }
 
-
-    public void FinishedTurn(Unit unit) //reset speed and switch to transition
+    // Reset speed and switch to transition
+    public void FinishedTurn(Unit unit) 
     {
         int pos = GetPosition(unit);
         int arrayPos;
@@ -119,39 +117,38 @@ public class GameLogic : MonoBehaviour
         else
             arrayPos = pos + 4;
         actionValueArray[arrayPos] = 0;
-        battleState = BattleState.TRANSITION;
+        battleState = BattleState.TRANSITION; // TODO: There's no state for animations to play out
     }
 
-
+    // Returns an int 0 - 3 depending on the position of the unit
     public int GetPosition(Unit unit)
     {
-        Unit[] units;
         if (unit.GetFriendly())
-            units = playerUnits;
-        else
-            units = enemyUnits;
-
-
-        for (int i = 0; i < 4; i++)
         {
-            if (units[i] == unit)
+            for (int i = 0; i < 4; i++)
             {
-                return i;
+                if (playerUnits[i].Equals(unit))
+                {
+                    return i;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (enemyUnits[i].Equals(unit))
+                {
+                    return i;
+                }
             }
         }
 
-        return 4; //whats the way to do this ah
+        throw new System.Exception("Unit is not found"); // TODO: Print log properly
     }
 
     public Unit GetUnit(int position, bool friendly)
     {
-        Unit[] units;
-        if (friendly)
-            units = playerUnits;
-        else
-            units = enemyUnits;
-        return units[position];
+        return (friendly) ? playerUnits[position] : enemyUnits[position];
     }
-
-
 }

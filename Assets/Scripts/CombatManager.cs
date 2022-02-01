@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -8,25 +6,20 @@ public class CombatManager : MonoBehaviour
     // Start is called before the first frame update
     private GameLogic gameLogic;
     private Unit currentUnit;
-    private Unit targetUnit; //needs to change to array to hit multiple?
+    private Unit targetUnit; // TODO: Change to List<Unit>
+
     private bool validTarget;
 
 
 
-    [SerializeField] private GameObject[] SkillUI = new GameObject[4];
+    [SerializeField] private GameObject[] skillUI = new GameObject[4];
     private Skill[] skills = { };
     private int selectedSkill;
 
 
     void Start()
     {
-        gameLogic = this.gameObject.GetComponent<GameLogic>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        gameLogic = GetComponent<GameLogic>();
     }
 
     public void TakeTurn(Unit unit)
@@ -34,19 +27,15 @@ public class CombatManager : MonoBehaviour
         currentUnit = unit;
         skills = currentUnit.GetSkills();
 
-        selectedSkill = 9; //clear default selection
+        selectedSkill = -1; // Clear default selection
         InitialiseUI();
-
-
-
-        //
     }
 
     private void InitialiseUI()
     {
         for (int i = 0; i < 4; i++)
         {
-            TextMeshProUGUI skillText = SkillUI[i].GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI skillText = skillUI[i].GetComponent<TextMeshProUGUI>();
             if (skills[i] != null)
                 skillText.SetText(skills[i].GetSkillname());
         }
@@ -71,9 +60,9 @@ public class CombatManager : MonoBehaviour
     private void Targetting(int skillNumber)
     {
         int skillRange = skills[skillNumber].GetRange();
-        int currentPos = gameLogic.GetPosition(currentUnit);
+        int currentPos = gameLogic.GetPosition(currentUnit); // Returns an int 0 - 3 depending on unit's position
         int targetPos;
-        if (currentPos  - skillRange < 0) //valid and targetting some enemy
+        if (currentPos - skillRange < 0) // Valid and targetting some enemy // TODO: Fix this
         {
             targetPos = skillRange - currentPos - 1;
             Debug.Log("Skill has range " + skillRange + ", playerPos is " + currentPos + "and targetPos is " + targetPos);
@@ -108,6 +97,4 @@ public class CombatManager : MonoBehaviour
 
         gameLogic.FinishedTurn(currentUnit);
     }
-
-
 }
