@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class AttackChangeEffect : CombatEffect
 {
-    public override void Activate(Unit unit)
+    public override void Activate(CharacterContainer characterContainer)
     {
-        
+
     }
 }

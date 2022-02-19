@@ -12,6 +12,11 @@ public class Unit : MonoBehaviour
 
     [SerializeField] private Skill[] skills = new Skill[4];
 
+    public int GetMaxHealth()
+    {
+        return maxHealth;
+    }
+
     public Skill[] GetSkills()
     { 
         return skills;

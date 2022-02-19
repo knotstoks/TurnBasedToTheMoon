@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EffectVisual
+{
+    Damage, Buff, Debuff
+}
+
 public class CharacterContainer : MonoBehaviour
 {
     // The order which stuff is diaplayed should be: Poison, Burn, Blind, AttackChange, DefenseChange
@@ -17,7 +22,7 @@ public class CharacterContainer : MonoBehaviour
         {
             if (effects[i].effectType == EffectType.EndOfTurn)
             {
-                effects[i].Activate(unit);
+                effects[i].Activate(this);
             }
         }
     }
@@ -30,6 +35,24 @@ public class CharacterContainer : MonoBehaviour
             {
                 switch (effectsToAdd[i].effectName) {
                     case "Poison":
+                        PoisonEffect poisonEffect = null;
+                        for (int j = 0; i < effects.Count; j++)
+                        {
+                            if (effects[j].effectName.Equals("Poison"))
+                            {
+                                poisonEffect = (PoisonEffect) effects[j];
+                                poisonEffect.AddStack();
+                                break;
+                            }
+                        }
+
+                        if (poisonEffect == null)
+                        {
+                            poisonEffect = new PoisonEffect();
+                            effects.Add(poisonEffect);
+                        }
+
+
                         break;
                     case "Burn":
                         break;
@@ -42,7 +65,7 @@ public class CharacterContainer : MonoBehaviour
         }
     }
 
-    public void UpdateEffectVisuals()
+    public void UpdateEffectVisuals(EffectVisual effectVisual, int n)
     {
 
     }
